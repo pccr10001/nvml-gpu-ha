@@ -1,0 +1,32 @@
+# NVML GPU Home Assistant Monitor Configuration File
+# This is an example configuration file for nvml-gpu-ha
+# Copy this file to /etc/nvml-gpu-ha.conf and modify as needed
+
+# Hostname prefix for GPU names (optional, uses system hostname if not specified)
+# hostname = "my-server"
+
+# MQTT Broker Configuration
+mqtt_host = "localhost"
+mqtt_port = 1883
+mqtt_username = ""
+mqtt_password = ""
+
+# MQTT Options
+mqtt_lwt_enable = true
+mqtt_retain = true
+
+# Monitoring Settings
+polling_period = 30  # Polling period in seconds
+
+# Example with authentication:
+# mqtt_host = "192.168.1.100"
+# mqtt_username = "homeassistant"
+# mqtt_password = "your_secure_password"
+# polling_period = 10
+
+# Example for faster polling:
+# polling_period = 10
+
+# Example with custom MQTT settings:
+# mqtt_lwt_enable = false
+# mqtt_retain = false
