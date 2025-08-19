@@ -226,7 +226,14 @@ func GetDeviceID(device GPUDevice) string {
 	shortPCIBusID := GetShortPCIBusID(device.PCIBusID)
 	deviceID := strings.Replace(shortPCIBusID, ":", "_", -1)
 	deviceID = strings.Replace(deviceID, ".", "_", -1)
-	return strings.ToLower(deviceID)
+
+	// Add GPU UUID suffix (first 8 characters) to ensure uniqueness across different machines
+	uuidSuffix := strings.Replace(device.UUID, "-", "", -1)
+	if len(uuidSuffix) > 8 {
+		uuidSuffix = uuidSuffix[:8]
+	}
+
+	return strings.ToLower(fmt.Sprintf("%s_%s", deviceID, uuidSuffix))
 }
 
 // GetDeviceDisplayName generates a display name in the format: {HOSTNAME} {PCI ID} - NVIDIA {MODEL} {VRAM}

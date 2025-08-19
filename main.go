@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"crypto/rand"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -165,7 +167,18 @@ func run(cmd *cobra.Command, args []string) {
 func setupMQTTClient() mqtt.Client {
 	opts := mqtt.NewClientOptions()
 	opts.AddBroker(fmt.Sprintf("tcp://%s:%d", cfg.MQTTHost, cfg.MQTTPort))
-	opts.SetClientID("nvml-gpu-ha")
+
+	// Generate random suffix for client ID to avoid conflicts
+	randomBytes := make([]byte, 3)
+	if _, err := rand.Read(randomBytes); err == nil {
+		clientID := fmt.Sprintf("nvml-gpu-ha-%s", hex.EncodeToString(randomBytes))
+		opts.SetClientID(clientID)
+	} else {
+		// Fallback to timestamp if random generation fails
+		clientID := fmt.Sprintf("nvml-gpu-ha-%d", time.Now().Unix())
+		opts.SetClientID(clientID)
+	}
+
 	opts.SetUsername(cfg.MQTTUsername)
 	opts.SetPassword(cfg.MQTTPassword)
 	opts.SetAutoReconnect(true)
